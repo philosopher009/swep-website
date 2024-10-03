@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Signup/Login</title>
+</head>
+
+<body>
+
+    <h1>Group 2 Project</h1>
+
+    <h2 class="signup-heading">Sign Up</h2>
+    <form onsubmit="submitSignup(event)">
+        <label for="signup-username">Username:</label>
+        <input type="text" id="signup-username" required>
+        <br>
+        <label for="signup-email">Email:</label>
+        <input type="email" id="signup-email" required>
+        <br>
+        <label for="signup-password">Password:</label>
+        <input type="password" id="signup-password" required>
+        <br>
+        <button type="submit">Sign Up</button>
+    </form>
+    <div class="password-guidelines">
+        <a href="#" class="guideline-link">
+            Set a Strong Password <br>
+            8 characters at least, <br>
+            uppercase, lowercase <br>
+            and add a symbol
+        </a>
+    </div>
+    
+    <div id="signup-message"></div>
+
+    <h2 class="login-heading">Log In</h2>
+    <form onsubmit="submitLogin(event)">
+        <label for="login-username">Username:</label>
+        <input type="text" id="login-username" required>
+        <br>
+        <label for="login-password">Password:</label>
+        <input type="password" id="login-password" required>
+        <br>
+        <button type="submit">Login</button>
+    </form>
+    <div id="login-message"></div>
+
+    <script>
+async function submitSignup(event) {
+    event.preventDefault(); // Prevent default form submission
+
+    const username = document.getElementById('signup-username').value;
+    const email = document.getElementById('signup-email').value;
+    const password = document.getElementById('signup-password').value;
+
+
+    const response = await fetch('http://127.0.0.1:5000/signup', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, email, password }),
+    });
+
+    const result = await response.json();
+    const messageArea = document.getElementById('signup-message');
+    if (response.ok) {
+        messageArea.textContent = "You have successfully signed up!";
+        messageArea.style.color = "green";
+    } else {
+        messageArea.textContent = result.error || "An error occurred.";
+        messageArea.style.color = "red";
+    }
+}
+
+
+        async function submitLogin(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+
+            const response = await fetch('http://127.0.0.1:5000/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password }),
+            });
+
+            const result = await response.json();
+            const messageArea = document.getElementById('login-message');
+            if (response.ok) {
+                messageArea.textContent = "You have successfully logged in!";
+                messageArea.style.color = "green";
+                setTimeout(() =>
+                    window.location.href = "./user.html"
+                    , 2000)
+            } else {
+                messageArea.textContent = result.error || "An error occurred.";
+                messageArea.style.color = "red";
+            }
+        }
+    </script>
+</body>
+
+</html>
